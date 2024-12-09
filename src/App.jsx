@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 
 function App() {
   return (
-    <div className="bg-[#19191B] min-h-screen flex flex-col">
+    <div className="bg-[#0F0F1A] min-h-screen w-full overflow-x-hidden">
       <Navbar />
       <main className="flex-grow">
        <HomePage/>
