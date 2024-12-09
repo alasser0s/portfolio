@@ -1,279 +1,445 @@
-import React from 'react'
-import { WobbleCard } from './ui/WopleCards'
-import laptop from '../assets/Desktop-1.png'
-import vision from '../assets/الرئيسية.png'
-import code from '../assets/code.png'
-import hand from '../assets/1733254806686.png'
-import { TypewriterEffectSmooth } from './ui/Typewritter-effect'
-import { AnimatedTestimonials } from './ui/animated-test'
+import React, { useEffect, useRef } from 'react';
+import { motion, useAnimation, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import gsap from 'gsap';
+import { TypewriterEffectSmooth } from './ui/Typewritter-effect';
+import { FlipWords } from "./ui/FlipWords";
+import { WobbleCard } from './ui/WopleCards';
+import laptop from '../assets/Desktop-1.png';
+import vision from '../assets/الرئيسية.png';
+import code from '../assets/code.png';
+import hand from '../assets/1733254806686.png';
 
-const Main = () => {
-  const testimonials = [
-    {
-      quote:
-        "AL-asser's expertise in React and modern web technologies helped us create a stunning, performant web application that exceeded our expectations.",
-      name: "Ahmed Hassan",
-      designation: "Startup Founder",
-      src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      quote:
-        "The attention to detail and clean code structure made our project maintenance a breeze. Highly recommend working with AL-asser.",
-      name: "Sara Mohamed",
-      designation: "Tech Lead",
-      src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      quote:
-        "Working with AL-asser was a great experience. Their problem-solving skills and technical knowledge helped us deliver our project on time.",
-      name: "Omar Khaled",
-      designation: "Project Manager",
-      src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      quote:
-        "The UI/UX design and implementation were top-notch. AL-asser brought our vision to life with modern, responsive design.",
-      name: "Nour Ahmed",
-      designation: "Design Director",
-      src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      quote:
-        "Excellent communication and project management skills. AL-asser was always available to discuss ideas and implement changes quickly.",
-      name: "Layla Ibrahim",
-      designation: "Product Owner",
-      src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-  ];
+// Tech Stack & Tools Icons
+import { 
+  SiDotnet, // Import C# Icon
+  SiHtml5, 
+  SiCss3, 
+  SiJavascript, 
+  SiMongodb, 
+  SiRedis, 
+  SiPython, 
+  SiMysql, 
+  SiFlutter, 
+  SiFirebase, 
+  SiReact, 
+  SiNextdotjs, 
+  SiAngular, 
+  SiGit, 
+  SiDocker, 
+  SiAmazon,
+  SiSharp
+} from 'react-icons/si';
+import FAQSection from '@/pages/FAQ';
 
-  const words = [
-    {
-      text: "Build",
-    },
-    {
-      text: "awesome",
-    },
-    {
-      text: "apps",
-    },
-    {
-      text: "with",
-    },
-    {
-      text: "AL-Asser.",
-      className: "text-blue-500 dark:text-blue-500 font-graphik",
-    },
-  ];
+// 3D Hover Project Card
+const ProjectCard = ({ title, description, image, tech, link, index }) => {
+  const ref = useRef(null);
+  const [hovered, setHovered] = React.useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], ["17.5deg", "-17.5deg"]), {
+    damping: 30,
+    stiffness: 300,
+  });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], ["-17.5deg", "17.5deg"]), {
+    damping: 30,
+    stiffness: 300,
+  });
+
+  const scale = useSpring(1, {
+    damping: 30,
+    stiffness: 300,
+  });
+
+  const onMouseMove = ({ clientX, clientY }) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = (clientX - rect.left) / rect.width - 0.5;
+    const y = (clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const onMouseEnter = () => {
+    setHovered(true);
+    scale.set(1.05);
+  };
+
+  const onMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setHovered(false);
+    scale.set(1);
+  };
+
+  // Alternate sides for vertical layout
+  const isLeft = index % 2 === 0;
 
   return (
-    <div className='relative mt-[1200px]'>
-      <div className='flex justify-center -top-20 relative'>
-        <TypewriterEffectSmooth words={words} />
-        <p className='absolute -bottom-2 text-[20px] font-bold font-monserrat text-white'>
+    <div className={`relative flex ${isLeft ? 'justify-start' : 'justify-end'} items-center w-full mb-20`}>
+      {/* Vertical timeline line & dot */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 h-full flex flex-col items-center">
+        <div className="w-1 bg-white/20 flex-1" />
+        <div className="w-3 h-3 bg-[#5454D4] rounded-full my-3 border-2 border-white/20" />
+        <div className="w-1 bg-white/20 flex-1" />
+      </div>
+
+      <motion.div
+        ref={ref}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        onMouseEnter={onMouseEnter}
+        style={{ perspective: 1000, transformStyle: "preserve-3d", scale }}
+        className={`relative w-full max-w-md rounded-xl cursor-pointer mx-4 overflow-hidden 
+          ${isLeft ? 'origin-left' : 'origin-right'}`}
+      >
+        <motion.div
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="bg-gradient-to-br from-[#0F0F1A] to-[#1A1A2E] rounded-xl shadow-2xl p-6 border border-[#5454D4]/20"
+        >
+          <div className="relative h-40 w-full overflow-hidden rounded-lg">
+            <motion.img
+              src={image}
+              alt={title}
+              className="h-full w-full object-cover"
+              animate={{ scale: hovered ? 1.1 : 1 }}
+              transition={{ duration: 0.4 }}
+            />
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
+              animate={{ opacity: hovered ? 1 : 0.3 }}
+            />
+          </div>
+
+          <motion.h3
+            className="mt-4 text-xl font-bold text-white"
+            style={{ transform: "translateZ(50px)" }}
+          >
+            {title}
+          </motion.h3>
+
+          <motion.p
+            className="mt-2 text-gray-400"
+            style={{ transform: "translateZ(30px)" }}
+          >
+            {description}
+          </motion.p>
+
+          <motion.div
+            className="mt-4 flex flex-wrap gap-2"
+            style={{ transform: "translateZ(40px)" }}
+          >
+            {tech.map((item, idx) => (
+              <motion.span
+                key={idx}
+                className="rounded-full bg-[#5454D4]/10 px-3 py-1 text-sm text-[#5454D4]"
+                whileHover={{ scale: 1.1 }}
+              >
+                {item}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-6 right-6 flex gap-3"
+            style={{ transform: "translateZ(60px)" }}
+          >
+            <motion.a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-[#5454D4] text-white hover:bg-[#4545B0] transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </motion.a>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+};
+
+const Main = () => {
+  // Controls for section animation
+  const controls = useAnimation();
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef);
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  useEffect(() => {
+    const moveBackground = (e) => {
+      const { clientX, clientY } = e;
+      const xPos = (clientX / window.innerWidth - 0.5) * 30;
+      const yPos = (clientY / window.innerHeight - 0.5) * 30;
+
+      gsap.to("#backgroundGradient", {
+        x: xPos,
+        y: yPos,
+        duration: 1,
+        ease: "power2.out"
+      });
+    };
+
+    window.addEventListener('mousemove', moveBackground);
+    return () => window.removeEventListener('mousemove', moveBackground);
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    }
+  };
+
+  const projects = [
+    {
+      title: "Modern Portfolio",
+      description: "A stunning portfolio website built with React, Framer Motion, and Three.js for an immersive user experience.",
+      image: laptop,
+      tech: ["React", "Framer Motion", "Tailwind CSS", "Three.js"],
+      link: "#"
+    },
+    {
+      title: "E-commerce Platform",
+      description: "A full-stack E-commerce solution with real-time inventory management and seamless checkout.",
+      image: vision,
+      tech: ["Next.js", "Node.js", "MongoDB", "Stripe"],
+      link: "#"
+    },
+    {
+      title: "AI Code Assistant",
+      description: "Leverage machine learning to provide intelligent code suggestions and completions.",
+      image: code,
+      tech: ["Python", "TensorFlow", "FastAPI", "React"],
+      link: "#"
+    }
+  ];
+
+  const techStack = [
+    { name: "HTML", color: "#E34F26", icon: <SiHtml5 size={28} color="#E34F26" /> },
+    { name: "CSS", color: "#1572B6", icon: <SiCss3 size={28} color="#1572B6" /> },
+    { name: "JavaScript", color: "#F7DF1E", icon: <SiJavascript size={28} color="#F7DF1E" /> },
+    { name: "MongoDB", color: "#47A248", icon: <SiMongodb size={28} color="#47A248" /> },
+    { name: "Redis", color: "#DC382D", icon: <SiRedis size={28} color="#DC382D" /> },
+    { name: "Python", color: "#3776AB", icon: <SiPython size={28} color="#3776AB" /> },
+    { name: "SQL", color: "#4479A1", icon: <SiMysql size={28} color="#4479A1" /> }, // Using MySQL icon as a representative
+    { name: "C#", color: "#239120", icon: <SiSharp size={28} color="#239120" /> }, // Added C#
+  ];
+
+  const frameworksTools = [
+    { name: "Firebase", color: "#FFCA28", icon: <SiFirebase size={28} color="#FFCA28" /> },
+    { name: "React", color: "#61DBFB", icon: <SiReact size={28} color="#61DBFB" /> },
+    { name: "Next.js", color: "#000000", icon: <SiNextdotjs size={28} color="#000000" /> },
+    { name: "Angular", color: "#DD0031", icon: <SiAngular size={28} color="#DD0031" /> },
+    { name: "Git", color: "#F1502F", icon: <SiGit size={28} color="#F1502F" /> },
+    { name: "Docker", color: "#2496ED", icon: <SiDocker size={28} color="#2496ED" /> },
+    { name: "AWS", color: "#FF9900", icon: <SiAmazon size={28} color="#FF9900" /> },
+    { name: "Flutter", color: "#02569B", icon: <SiFlutter size={28} color="#02569B" /> }, // Added Flutter
+
+  ];
+
+
+  return (
+    <div className="relative bg-[#0F0F1A] text-white">
+      {/* Intro Section with Typewriter */}
+      <div className='relative mt-[120px] flex flex-col items-center' id="projects">
+        <TypewriterEffectSmooth words={[
+          { text: "Build" },
+          { text: "awesome" },
+          { text: "apps" },
+          { text: "with" },
+          { text: "AL-Asser.", className: "text-blue-500 dark:text-blue-500 font-graphik" },
+        ]} />
+        <p className='text-[20px] font-bold font-monserrat text-white mt-2'>
           Turning ideas into reality
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-[2000px] mx-auto w-full">
+      {/* WobbleCards Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-[2000px] mx-auto w-full mb-32 px-4 mt-20">
         <WobbleCard
-          containerClassName="col-span-1 lg:col-span-2 h-full bg-blue-800 min-h-[500px] lg:min-h-[300px]"
+          containerClassName="col-span-1 lg:col-span-2 h-full bg-gradient-to-br from-[#5454D4] to-[#3F3FA8] min-h-[500px] lg:min-h-[300px] relative overflow-hidden"
         >
-          <div className="max-w-xs">
-            <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+          <div className="max-w-xs relative z-10">
+            <h2 className="text-left text-base md:text-xl lg:text-3xl font-semibold text-white">
               Full-Stack Development Excellence
             </h2>
-            <p className="mt-4 text-left text-base/6 text-neutral-200">
-              Specializing in modern web technologies to create scalable, 
-              performant applications that deliver exceptional user experiences.
+            <p className="mt-4 text-left text-base text-white/80">
+              Specializing in modern web technologies to create scalable, performant applications that deliver exceptional user experiences.
             </p>
           </div>
-          <img
+          <div className="absolute inset-0 bg-gradient-to-br from-[#5454D4]/20 to-transparent mix-blend-overlay" />
+          <motion.img
             src={laptop}
             width={500}
             height={500}
             alt="development workspace"
-            className="absolute right-32 filter -bottom-5 object-contain rounded-2xl"
+            className="absolute right-32 filter -bottom-5 object-contain rounded-2xl hover:scale-105 transition-transform duration-300"
           />
-          <img
+          <motion.img
             src={hand}
             width={500}
             height={500}
             alt="coding illustration"
-            className="absolute -right-20 filter -top-7 object-contain rounded-2xl"
+            className="absolute -right-20 filter -top-7 object-contain rounded-2xl hover:scale-105 transition-transform duration-300"
           />
         </WobbleCard>
 
-        <WobbleCard containerClassName="col-span-1 min-h-[300px]">
-          <h2 className="max-w-80 text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-            Clean Code, Better Solutions
-          </h2>
-          <p className="mt-4 max-w-[26rem] text-left text-base/6 text-neutral-200">
-            Writing maintainable, efficient code that scales with your business needs.
-          </p>
-          <img
+        <WobbleCard containerClassName="col-span-1 min-h-[300px] bg-gradient-to-br from-[#1A1A2E] to-[#0F0F1A] relative overflow-hidden">
+          <div className="relative z-10">
+            <h2 className="text-left text-base md:text-xl lg:text-3xl font-semibold text-white">
+              Clean Code, Better Solutions
+            </h2>
+            <p className="mt-4 text-left text-base text-white/80">
+              Writing maintainable, efficient code that scales with your business needs.
+            </p>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#5454D4]/10 to-transparent mix-blend-overlay" />
+          <motion.img
             src={code}
             width={500}
             height={500}
             alt="code example"
-            className=" relative -right-36 filter -bottom-5 object-contain rounded-2xl"
-          />
-        </WobbleCard>
-
-        <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-blue-900 min-h-[500px] lg:min-h-[600px] xl:min-h-[300px]">
-          <div className="max-w-sm">
-            <h2 className="max-w-sm md:max-w-lg text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-              Let's Create Something Amazing Together
-            </h2>
-            <p className="mt-4 max-w-[26rem] text-left text-base/6 text-neutral-200">
-              From concept to deployment, I'm here to help bring your vision to life
-              with cutting-edge web technologies and best practices.
-            </p>
-          </div>
-          <img
-            src={vision}
-            width={500}
-            height={500}
-            alt="project vision"
-            className="absolute right-32 filter -bottom-5 object-contain rounded-2xl"
+            className="relative -right-36 filter -bottom-5 object-contain rounded-2xl hover:scale-105 transition-transform duration-300"
           />
         </WobbleCard>
       </div>
 
-      <div className='relative mt-32 pb-20 max-w-7xl mx-auto px-4'>
-        <div className="absolute -top-40 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-blue-600/30 via-blue-400/20 to-transparent rounded-full blur-3xl opacity-50 animate-pulse pointer-events-none"></div>
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-emerald-500/30 via-green-400/20 to-transparent rounded-full blur-3xl opacity-40 animate-pulse pointer-events-none"></div>
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-t from-purple-600/30 via-indigo-400/20 to-transparent rounded-full blur-3xl opacity-30 mix-blend-multiply pointer-events-none"></div>
+      {/* Projects Section: Vertical Timeline */}
+      <div className="relative py-20 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-16 relative z-10"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">Featured Projects</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Explore some of my recent work showcasing modern web development expertise
+          </p>
+        </motion.div>
 
-        <div className='absolute top-8 left-8'>
-          <svg
-            className='w-10 h-10 text-white opacity-80 hover:opacity-100 transition-opacity duration-300'
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M8 5v14l11-7z" />
-          </svg>
+        <div className="relative z-10 flex flex-col items-center w-full max-w-5xl mx-auto">
+          {projects.map((project, index) => (
+            <ProjectCard key={index} index={index} {...project} />
+          ))}
         </div>
 
-        <div className='absolute bottom-8 left-16'>
-          <svg
-            className='w-8 h-8 text-white opacity-80 hover:scale-110 transition-transform duration-300'
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-        </div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[#5454D4]/20 rounded-full filter blur-3xl opacity-20 animate-pulse" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#5454D4]/20 rounded-full filter blur-3xl opacity-20 animate-pulse" />
+      </div>
 
-        <div className='absolute top-12 right-16'>
-          <svg
-            className='w-6 h-6 text-white opacity-80 hover:rotate-45 transition-transform duration-300'
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </div>
+      {/* Tech Stack Section */}
+      <div className="relative py-20" id="techstack">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-16 relative z-10"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">My Tech Stack</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            A curated selection of technologies I use to build efficient, scalable, and visually striking solutions.
+          </p>
+        </motion.div>
 
-        <h2 className="text-5xl font-bold text-white text-center relative z-10">
-          The Service We Provide For You
-        </h2>
-        <p className='mt-2 text-center text-neutral-300'>
-          We deliver high-quality services tailored to your needs.
-        </p>
-
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-16'>
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-blue-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>Frontend (React)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              Build dynamic, interactive UIs that scale.
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-red-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M3 5.25h18M3 12h18M3 18.75h18" />
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>Backend (Node.js)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              Robust server-side logic and APIs at scale.
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-green-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M4.5 6c0-2 3.357-3.75 7.5-3.75s7.5 1.75 7.5 3.75-3.357 3.75-7.5 3.75S4.5 8 4.5 6zm0 0v7.5c0 2 3.357 3.75 7.5 3.75s7.5-1.75 7.5-3.75V6"/>
-                <path strokeWidth="1.5" d="M4.5 13.5v4.5c0 2 3.357 3.75 7.5 3.75s7.5-1.75 7.5-3.75v-4.5"/>
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>SQL (Databases)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              Store, query, and manage data efficiently.
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-yellow-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M3 16.5h17.25M3 16.5l3-7.5h11.25l3 7.5M9 9V6H6v3M12 9V6h3v3"/>
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>DevOps (Docker)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              Containerize and deploy apps anywhere.
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-indigo-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M9 4.5h6M12 1.5v3M12 19.5v3M4.5 9v6M19.5 9v6M8.25 8.25h7.5v7.5h-7.5z"/>
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>C# (Performance)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              High-performance applications on .NET.
-            </p>
-          </div>
-
-          <div className='flex flex-col items-center text-center p-6 bg-[#0f172a] rounded-lg shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl'>
-            <div className='bg-[#1e293b] p-4 rounded-full mb-4'>
-              <svg className='w-10 h-10 text-pink-500' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeWidth="1.5" d="M5.25 14.25a4.5 4.5 0 018.598-1.836A3.75 3.75 0 1117.25 15h-12"/>
-              </svg>
-            </div>
-            <h3 className='text-xl font-semibold text-white'>Cloud (AWS)</h3>
-            <p className='text-sm text-gray-300 mt-2'>
-              Scalable infrastructure and global deployments.
-            </p>
-          </div>
+        <div className="relative z-10 max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-10 px-4">
+          {techStack.map((tech, idx) => (
+            <motion.div
+              key={tech.name}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: idx * 0.05, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center justify-center p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-colors border border-white/10 shadow-lg"
+            >
+              <div className="mb-3">
+                {tech.icon}
+              </div>
+              <p className="text-white/90 font-medium">{tech.name}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      <div className='flex relative -bottom-[100px] flex-col items-center'>
-        <div>
-          <AnimatedTestimonials testimonials={testimonials} />
+      {/* Frameworks & Tools Section */}
+      <div className="relative py-20" id="frameworks-tools">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-16 relative z-10"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">Frameworks & Tools</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Beyond the core stack, here are additional tools and frameworks that streamline my workflow, enabling rapid and reliable deployments.
+          </p>
+        </motion.div>
+
+        <div className="relative z-10 max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-10 px-4">
+          {frameworksTools.map((fw, idx) => (
+            <motion.div
+              key={fw.name}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: idx * 0.05, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center justify-center p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-colors border border-white/10 shadow-lg"
+            >
+              <div className="mb-3">
+                {fw.icon}
+              </div>
+              <p className="text-white/90 font-medium">{fw.name}</p>
+            </motion.div>
+          ))}
         </div>
-        
       </div>
+
+      {/* Animated Background Gradient */}
+      <div
+        id="backgroundGradient"
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, #5454D4 0%, transparent 50%)',
+          filter: 'blur(100px)',
+          transform: 'translate3d(0, 0, 0)',
+          pointerEvents: 'none'
+        }}
+      />
+      <FAQSection/>
     </div>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;

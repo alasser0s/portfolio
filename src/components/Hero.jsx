@@ -1,75 +1,222 @@
-import React from 'react'
+// Hero.jsx
+import React, { useEffect, useRef } from 'react';
 import { FlipWords } from "./ui/FlipWords";
-import { LampContainer } from './ui/LampContainer';
-import { motion } from "framer-motion";
-import laptop from '../assets/1732991547108.png'
-import businessdude from '../assets/1732897313668.png'
-import chief from '../assets/1732897290343.png'
+import { motion, useAnimation, useInView } from "framer-motion";
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Float, Stars, Environment, ContactShadows } from '@react-three/drei';
+import gsap from 'gsap';
+
+// Example floating objects
+const FloatingCube = () => {
+  return (
+    <Float speed={1.5} rotationIntensity={1.5} floatIntensity={2}>
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#5454D4" emissive="#10105A" emissiveIntensity={0.5} />
+      </mesh>
+    </Float>
+  );
+};
+
+const FloatingSphere = () => {
+  return (
+    <Float speed={1.2} rotationIntensity={1.2} floatIntensity={1.5}>
+      <mesh>
+        <sphereGeometry args={[0.7, 32, 32]} />
+        <meshStandardMaterial color="#FF6B6B" emissive="#400000" emissiveIntensity={0.5} />
+      </mesh>
+    </Float>
+  );
+};
+
+// If you have a model file, you can import and display it like this:
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// const FloatingModel = () => {
+//   const { scene } = useLoader(GLTFLoader, '/path/to/model.glb');
+//   return (
+//     <Float speed={1} rotationIntensity={1} floatIntensity={1.5}>
+//       <primitive object={scene} scale={[0.5, 0.5, 0.5]} />
+//     </Float>
+//   );
+// };
+
 const Hero = () => {
-    const words = ["better", "cute", "beautiful", "modern"];
-    return (
-        <div className='relative'
-        >
+  const words = ["innovative", "creative", "powerful", "modern"];
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+  const backgroundRef = useRef(null);
 
-            <div className="absolute top-[500px] right-0  transform -translate-y-1/2 h-[464.5px] w-[1240px]   bg-[#5454D4]  -skew-y-12">
-                <div className=' bottom-0 right-0 bg-purple-500 clip-path-polygon overflow-hidden'>
-                    <div className='object-fill'>
-                        <div className='object-cover'>
-                            <img
-                                src={businessdude}
-                                alt="Person"
-                                className="absolute bottom-0 left-[50px] object-cover h-auto max-w-[470px]"
-                            />
-                        </div>
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
 
-                        <img
-                            src={laptop}
-                            width={500}
-                            alt="Person"
-                            className="absolute bottom-0 right-2 object-cover"
-                        />
-                        <img
-                            src={chief}
-                            alt="Person"
-                            width={430}
-                            height={430}
-                            className="absolute bottom-0 left-[380px] object-cover max-w-[430px]"
-                        />
-                    </div>
+  useEffect(() => {
+    const bg = backgroundRef.current;
+    if (bg) {
+      const moveBackground = (e) => {
+        const { clientX, clientY } = e;
+        const xPos = (clientX / window.innerWidth - 0.5) * 30;
+        const yPos = (clientY / window.innerHeight - 0.5) * 30;
 
-                </div>
-            </div>
+        gsap.to(bg, {
+          x: xPos,
+          y: yPos,
+          duration: 1,
+          ease: "power2.out"
+        });
+      };
 
-            <div className=' absolute flex flex-col sm:flex-row '>
-                <div className="relative bg-custom-gradient w-[467px] h-[1233.79px] rounded-[233.5px] rotate-[-54.37deg] blur-[200px] opacity-[27%] left-24 bottom-[250px]"
-                >
+      window.addEventListener('mousemove', moveBackground);
+      return () => window.removeEventListener('mousemove', moveBackground);
+    }
+  }, []);
 
-                </div>
-                <div className='relative sm:right-[335px] sm:top-[155px] w-[582px] h-[252px]'>
-                    <h1 className='text-[40px] sm:text-[80px] font-graphik font-bold text-white'>  Build
-                        <FlipWords words={words} className={'font-graphik'} /> <br />
-                        websites with AL-asser</h1>
-                    <p className='font-nunito text-[16px] sm:text-[21px] text-white'>Creative and results-driven software developer with expertise in JavaScript (React, Next.js, Angular), Python (Django), and C#. Experienced in building scalable applications and collaborating with international teams on innovative projects like a gym app and an RTS game. Passionate about solving complex problems and delivering exceptional user experiences.
-                    </p>
-                    <div className=''>
-                    <svg viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className=' relative -bottom-7 w-10'>
-                                <path d="M8 7.5C8 6.94772 8.44772 6.5 9 6.5L17 6.5C17.5523 6.5 18 6.94772 18 7.5V15.5C18 16.0523 17.5523 16.5 17 16.5C16.4477 16.5 16 16.0523 16 15.5V9.91421L7.70711 18.2071C7.31658 18.5976 6.68342 18.5976 6.29289 18.2071C5.90237 17.8166 5.90237 17.1834 6.29289 16.7929L14.5858 8.5L9 8.5C8.44772 8.5 8 8.05228 8 7.5Z" fill="white" />
-                            </svg>
-                        <a href="/services" className='px-8 py-2 rounded-md bg-[#5454D4] text-white font-bold transition duration-200 hover:bg-purple-500 hover:text-black border-2 border-transparent hover:border-teal-500'>
-        
-                            My Projects
-                            
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
 
-                        </a>
-                        
-                    </div>
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    }
+  };
 
-                </div>
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#0F0F1A]">
+      {/* Animated Background Gradient */}
+      <div
+        ref={backgroundRef}
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, #5454D4 0%, transparent 50%)',
+          filter: 'blur(100px)',
+          transform: 'translate3d(0, 0, 0)'
+        }}
+      />
 
-            </div>
+      {/* 3D Scene */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Canvas>
+          <ambientLight intensity={0.4} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <Environment preset="city" />
+          <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+          <ContactShadows position={[0, -1.4, 0]} opacity={0.5} scale={10} blur={2.5} far={4.5} />
+          <group position={[-2, 1, 0]}>
+            <FloatingCube />
+          </group>
+          <group position={[2, -1, 0]}>
+            <FloatingSphere />
+          </group>
+          {/* <group position={[0, 0, -2]}>
+            <FloatingModel />
+          </group> */}
+          <OrbitControls enableZoom={false} enablePan={false} />
+        </Canvas>
+      </div>
 
+      {/* Content */}
+      <motion.div
+        ref={ref}
+        variants={containerVariants}
+        initial="hidden"
+        animate={controls}
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16"
+      >
+        <div className="text-center">
+          <motion.div variants={itemVariants} className="space-y-2">
+            <h2 className="text-[#5454D4] font-bold text-xl">Welcome to my portfolio</h2>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight">
+              Creating{' '}
+              <FlipWords words={words} className="text-[#5454D4]" />
+              <br />
+              Digital Solutions
+            </h1>
+          </motion.div>
+
+          <motion.p
+            variants={itemVariants}
+            className="mt-6 text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto"
+          >
+            I’m a full-stack developer specializing in modern technologies. I build immersive, high-performance web experiences that bring ideas to life.
+          </motion.p>
+
+          <motion.div
+            variants={itemVariants}
+            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <motion.a
+              href="#projects"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-[#5454D4] text-white rounded-full font-medium 
+                         hover:bg-[#4646B3] transition-colors duration-300 
+                         shadow-lg hover:shadow-[#5454D4]/50"
+            >
+              View My Work
+            </motion.a>
+            <motion.a
+              href="#contact"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 border-2 border-[#5454D4] text-white rounded-full 
+                         font-medium hover:bg-[#5454D4]/10 transition-colors duration-300"
+            >
+              Get in Touch
+            </motion.a>
+          </motion.div>
+
+          {/* Floating badges */}
+          <div className="mt-16 flex justify-center gap-6 flex-wrap">
+            {['React', 'Next.js', 'Node.js', 'TypeScript'].map((tech, index) => (
+              <motion.div
+                key={tech}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 + index * 0.1 }}
+                className="px-4 py-2 bg-white/5 rounded-full text-sm text-white/80 
+                           backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-white/20 hover:bg-white/10 transition-colors"
+              >
+                {tech}
+              </motion.div>
+            ))}
+          </div>
         </div>
-    )
-}
+      </motion.div>
 
-export default Hero
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0], }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+          className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-2"
+        >
+          <motion.div className="w-1 h-1 bg-white/60 rounded-full" />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default Hero;
