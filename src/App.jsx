@@ -1,25 +1,18 @@
-// App.js
+// App.jsx
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
+import Navbar from './components/Header';// Adjust the import path as needed
 import Footer from './components/Footer';
+import Main from './components/Main';
+import './App.css'; // Ensure this file includes the smooth scroll behavior
+import Hero from './components/Hero';
 import HomePage from './pages/HomePage';
-import ServicesPage from './pages/ServicesPage';
-import FAQ from './pages/FAQ';
-import Support from './pages/Support';
-import './App.css';
- 
+
 function App() {
   return (
     <div className="bg-[#19191B] min-h-screen flex flex-col">
-      <Header />
+      <Navbar />
       <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/support" element={<Support />} />
-        </Routes>
+       <HomePage/>
       </main>
       <Footer />
     </div>

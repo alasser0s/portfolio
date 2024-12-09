@@ -13,7 +13,7 @@ import {
   import { SocialIcon } from 'react-social-icons'
 const ContactSection = () => {
   return (
-    <div className="relative mt-80">
+    <div className="relative mt-80" id='contact'>
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -left-[250px] tran w-[600px] h-[600px] bg-gradient-to-br from-blue-600/20 via-blue-400/10 to-transparent rounded-full rotate-[-54.37deg] blur-[20px] opacity-[27%] animate-pulse"></div>

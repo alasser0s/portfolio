@@ -98,7 +98,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0F0F1A]">
+    <div className="relative min-h-screen overflow-hidden bg-[#0F0F1A]" id='home'>
       {/* Animated Background Gradient */}
       <div
         ref={backgroundRef}

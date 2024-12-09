@@ -1,3 +1,4 @@
+// Main.jsx
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
 import gsap from 'gsap';
@@ -5,13 +6,12 @@ import { TypewriterEffectSmooth } from './ui/Typewritter-effect';
 import { FlipWords } from "./ui/FlipWords";
 import { WobbleCard } from './ui/WopleCards';
 import laptop from '../assets/Desktop-1.png';
-import vision from '../assets/الرئيسية.png';
+import vision from '../assets/الرئيسية.png'; // Ensure correct asset path
 import code from '../assets/code.png';
-import hand from '../assets/1733254806686.png';
+import hand from '../assets/1733254806686.png'; // Ensure correct asset path
 
 // Tech Stack & Tools Icons
 import { 
-  SiDotnet, // Import C# Icon
   SiHtml5, 
   SiCss3, 
   SiJavascript, 
@@ -26,11 +26,11 @@ import {
   SiAngular, 
   SiGit, 
   SiDocker, 
-  SiAmazon,
+  SiAmazon, 
   SiSharp
 } from 'react-icons/si';
-import FAQSection from '@/pages/FAQ';
 
+import FAQSection from '@/pages/FAQ';
 // 3D Hover Project Card
 const ProjectCard = ({ title, description, image, tech, link, index }) => {
   const ref = useRef(null);
@@ -107,28 +107,28 @@ const ProjectCard = ({ title, description, image, tech, link, index }) => {
               animate={{ scale: hovered ? 1.1 : 1 }}
               transition={{ duration: 0.4 }}
             />
-            <motion.div
+            <motion.div 
               className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
               animate={{ opacity: hovered ? 1 : 0.3 }}
             />
           </div>
 
-          <motion.h3
-            className="mt-4 text-xl font-bold text-white"
+          <motion.h3 
+            className="mt-4 text-xl font-bold text-white" 
             style={{ transform: "translateZ(50px)" }}
           >
             {title}
           </motion.h3>
 
-          <motion.p
-            className="mt-2 text-gray-400"
+          <motion.p 
+            className="mt-2 text-gray-400" 
             style={{ transform: "translateZ(30px)" }}
           >
             {description}
           </motion.p>
 
-          <motion.div
-            className="mt-4 flex flex-wrap gap-2"
+          <motion.div 
+            className="mt-4 flex flex-wrap gap-2" 
             style={{ transform: "translateZ(40px)" }}
           >
             {tech.map((item, idx) => (
@@ -166,7 +166,7 @@ const ProjectCard = ({ title, description, image, tech, link, index }) => {
 };
 
 const Main = () => {
-  // Controls for section animation
+  
   const controls = useAnimation();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef);
@@ -194,29 +194,6 @@ const Main = () => {
     window.addEventListener('mousemove', moveBackground);
     return () => window.removeEventListener('mousemove', moveBackground);
   }, []);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96]
-      }
-    }
-  };
 
   const projects = [
     {
@@ -249,8 +226,8 @@ const Main = () => {
     { name: "MongoDB", color: "#47A248", icon: <SiMongodb size={28} color="#47A248" /> },
     { name: "Redis", color: "#DC382D", icon: <SiRedis size={28} color="#DC382D" /> },
     { name: "Python", color: "#3776AB", icon: <SiPython size={28} color="#3776AB" /> },
-    { name: "SQL", color: "#4479A1", icon: <SiMysql size={28} color="#4479A1" /> }, // Using MySQL icon as a representative
-    { name: "C#", color: "#239120", icon: <SiSharp size={28} color="#239120" /> }, // Added C#
+    { name: "SQL", color: "#4479A1", icon: <SiMysql size={28} color="#4479A1" /> },
+    { name: "C#", color: "#239120", icon: <SiSharp size={28} color="#239120" /> },
   ];
 
   const frameworksTools = [
@@ -261,15 +238,13 @@ const Main = () => {
     { name: "Git", color: "#F1502F", icon: <SiGit size={28} color="#F1502F" /> },
     { name: "Docker", color: "#2496ED", icon: <SiDocker size={28} color="#2496ED" /> },
     { name: "AWS", color: "#FF9900", icon: <SiAmazon size={28} color="#FF9900" /> },
-    { name: "Flutter", color: "#02569B", icon: <SiFlutter size={28} color="#02569B" /> }, // Added Flutter
-
+    { name: "Flutter", color: "#02569B", icon: <SiFlutter size={28} color="#02569B" /> },
   ];
-
 
   return (
     <div className="relative bg-[#0F0F1A] text-white">
-      {/* Intro Section with Typewriter */}
-      <div className='relative mt-[120px] flex flex-col items-center' id="projects">
+      {/* Hero/Intro Section */}
+      <div className='relative mt-[120px] flex flex-col items-center'>
         <TypewriterEffectSmooth words={[
           { text: "Build" },
           { text: "awesome" },
@@ -282,8 +257,8 @@ const Main = () => {
         </p>
       </div>
 
-      {/* WobbleCards Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-[2000px] mx-auto w-full mb-32 px-4 mt-20">
+      {/* About Section (WobbleCards) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-[2000px] mx-auto w-full mb-32 px-4 mt-20" id="about">
         <WobbleCard
           containerClassName="col-span-1 lg:col-span-2 h-full bg-gradient-to-br from-[#5454D4] to-[#3F3FA8] min-h-[500px] lg:min-h-[300px] relative overflow-hidden"
         >
@@ -332,8 +307,8 @@ const Main = () => {
         </WobbleCard>
       </div>
 
-      {/* Projects Section: Vertical Timeline */}
-      <div className="relative py-20 overflow-hidden">
+      {/* Projects Section */}
+      <div className="relative py-20 overflow-hidden" id="projects">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -426,6 +401,14 @@ const Main = () => {
         </div>
       </div>
 
+      {/* Contact Section */}
+
+
+      {/* FAQ Section */}
+      <div id="faq">
+        <FAQSection />
+      </div>
+
       {/* Animated Background Gradient */}
       <div
         id="backgroundGradient"
@@ -437,7 +420,6 @@ const Main = () => {
           pointerEvents: 'none'
         }}
       />
-      <FAQSection/>
     </div>
   );
 };

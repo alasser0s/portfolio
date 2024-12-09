@@ -1,3 +1,4 @@
+// Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,10 +15,11 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#' },
+    { name: 'Home', href: '#home' },
     { name: 'Projects', href: '#projects' },
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
+    { name: 'FAQ', href: '#faq' },
   ];
 
   return (
@@ -39,7 +41,7 @@ const Navbar = () => {
               whileTap={{ scale: 0.95 }}
               className="flex-shrink-0"
             >
-              <a href="#" className="text-white font-bold text-xl">
+              <a href="#home" className="text-white font-bold text-xl">
                 AL-asser
               </a>
             </motion.div>
