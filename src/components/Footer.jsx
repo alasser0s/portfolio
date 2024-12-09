@@ -19,9 +19,7 @@ const Footer = () => {
         </div>
 
         {/* Center Section: Links */}
-        <div className="flex gap-6 text-sm text-neutral-300">
-          <Link to="/support" className="hover:text-white transition-colors">Support</Link>
-        </div>
+        
 
         {/* Right Section: Copyright */}
         <div className="text-sm text-neutral-400">
