@@ -210,7 +210,7 @@ const Main = () => {
       title: "Blog-E-commerce mix Website",
       description: "a full stack blog-e-commerce mix website that contains creating post , updating post , deleting post , creating products , updating products , deleting produts",
       image: vision,
-      tech: ["React.ts", "Node.js", "MongoDB", "Stripe" , "typescript" , "tailwindcss" , "framer-motion" , "saas"],
+      tech: ["React.ts", "Node.js", "MongoDB", "Stripe" , "typescript" , "tailwindcss" , "framer-motion" , "saas" , "firebase" , "redux"],
       link: "https://alasser0s.github.io/vision/"
     },
     {
