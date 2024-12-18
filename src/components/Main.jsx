@@ -9,6 +9,9 @@ import laptop from '../assets/Desktop-1.png';
 import vision from '../assets/الرئيسية.png'; // Ensure correct asset path
 import code from '../assets/code.png';
 import hand from '../assets/1733254806686.png'; // Ensure correct asset path
+import myshop from '../assets/myshop.jpeg'
+import salesDashboard from '../assets/sales-dashboard.jpeg'
+import restaurant from '../assets/restaurant.jpeg'
 
 // Tech Stack & Tools Icons
 import { 
@@ -197,25 +200,32 @@ const Main = () => {
 
   const projects = [
     {
-      title: "Modern Portfolio",
-      description: "A stunning portfolio website built with React, Framer Motion, and Three.js for an immersive user experience.",
-      image: laptop,
-      tech: ["React", "Framer Motion", "Tailwind CSS", "Three.js"],
-      link: "#"
-    },
-    {
-      title: "E-commerce Platform",
+      title: "E-commerce Website",
       description: "A full-stack E-commerce solution with real-time inventory management and seamless checkout.",
-      image: vision,
-      tech: ["Next.js", "Node.js", "MongoDB", "Stripe"],
-      link: "#"
+      image: myshop,
+      tech: ["Reactjs", "Framer Motion", "Tailwind CSS", "mongodb" , "stripe" , "nodejs" , "express"],
+      link: "https://alasser0s.github.io/my-ecommerce/"
     },
     {
-      title: "AI Code Assistant",
-      description: "Leverage machine learning to provide intelligent code suggestions and completions.",
-      image: code,
-      tech: ["Python", "TensorFlow", "FastAPI", "React"],
-      link: "#"
+      title: "Blog-E-commerce mix Website",
+      description: "a full stack blog-e-commerce mix website that contains creating post , updating post , deleting post , creating products , updating products , deleting produts",
+      image: vision,
+      tech: ["React.ts", "Node.js", "MongoDB", "Stripe" , "typescript" , "tailwindcss" , "framer-motion" , "saas"],
+      link: "https://alasser0s.github.io/vision/"
+    },
+    {
+      title: "Restaurant Website",
+      description: "a full stack restaurant website that contains Booking table , Menu Showoff , Orderring , and more",
+      image: restaurant,
+      tech: ["Emailjs", "typescript", "tailwind", "Next.ts"],
+      link: "https://alasser0s.github.io/restaurant-web/"
+    },
+    {
+      title: "Sales Dashboard",
+      description: "sales dashboard for a businesses that benfits from the data and analytics.",
+      image: salesDashboard,
+      tech: ["Python", "Django", "PowerBI", "Reactjs" , "tailwindcss" , "framer-motion"],
+      link: "https://alasser0s.github.io/sales-dashboard/"
     }
   ];
 

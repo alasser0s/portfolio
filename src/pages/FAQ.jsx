@@ -7,7 +7,7 @@ const faqData = [
   {
     question: "What services do you offer?",
     answer:
-      "I offer full-stack web development, including front-end design, backend services, database management, API integrations, and more. I specialize in cutting-edge technologies like React, Next.js, Node.js, and Tailwind CSS."
+      "I offer full-stack web development, including front-end design, backend services, database management, API integrations, and more. I specialize in technologies like React.ts, Next.ts, Node.js, and Tailwind CSS."
   },
   {
     question: "How does the development process work?",
